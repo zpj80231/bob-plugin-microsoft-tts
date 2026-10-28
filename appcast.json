@@ -2,6 +2,14 @@
   "identifier": "io.zpj80231.bob-plugin-microsoft-tts",
   "versions": [
     {
+      "version": "1.1.1",
+      "desc": "https://github.com/zpj80231/bob-plugin-microsoft-tts/blob/main/CHANGELOG.md",
+      "sha256": "f0559d002034df27f8465161ea8a83ec371c49f46af2cb0776a2613bf44ecefa",
+      "url": "https://github.com/zpj80231/bob-plugin-microsoft-tts/releases/download/v1.1.1/bob-plugin-microsoft-tts-v1.1.1.bobplugin",
+      "minBobVersion": "1.8.0",
+      "timestamp": 1793183781311
+    },
+    {
       "version": "1.1.0",
       "desc": "https://github.com/zpj80231/bob-plugin-microsoft-tts/blob/main/CHANGELOG.md",
       "sha256": "adffa7e41247b617cfed089fd8521b43757d2b40500d15cc103b55efca5843c9",
