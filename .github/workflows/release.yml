@@ -37,11 +37,33 @@ jobs:
 
       - name: Commit & push version files
         run: |
+          set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add appcast.json info.json package.json CHANGELOG.md
-          git diff --cached --quiet || git commit -m "chore: update version files for ${{ github.ref_name }}"
-          git push origin HEAD:main
+
+          # 构建阶段改写过的 appcast/package/info 先丢弃：条目要在最新 main 上重算
+          git checkout -- .
+
+          # 提交必须长在 origin/main 头上。tag 若不是 main 的直系祖先（例如 tag 打在
+          # 分支提交上、main 之后又有 bot 提交或合并），从 tag 直接 push 必然被拒；
+          # 而且以 tag 的 appcast 为基底生成，还会覆盖掉主线上的历史版本条目。
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git checkout -B release-bot FETCH_HEAD
+            node scripts/update-appcast.js "${GITHUB_REF_NAME}"
+            git add appcast.json info.json package.json CHANGELOG.md
+            git diff --cached --quiet || git commit -m "chore: update version files for ${GITHUB_REF_NAME}"
+            if git push origin HEAD:main; then
+              echo "pushed to main on attempt ${attempt}"
+              exit 0
+            fi
+            echo "push rejected on attempt ${attempt}（main 在此期间又有新提交），重试"
+            git checkout -- .
+            sleep $((attempt * 3))
+          done
+
+          echo "多次重试后仍无法推送到 main" >&2
+          exit 1
 
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1

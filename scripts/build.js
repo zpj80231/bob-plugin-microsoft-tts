@@ -26,6 +26,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import esbuild from 'esbuild';
 import AdmZip from 'adm-zip';
+import {buildAppcastEntry, upsertAppcast} from './appcast.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -183,17 +184,14 @@ function updateAppcast() {
     const info = readJson(infoPath);
     const appcast = readJson(appcastPath);
 
-    const entry = {
+    const entry = buildAppcastEntry({
         version,
-        desc: `https://github.com/${repository}/blob/main/CHANGELOG.md`,
         sha256,
-        url: `https://github.com/${repository}/releases/download/${tag}/${artifactName}`,
+        repository,
         minBobVersion: info.minBobVersion || '1.8.0',
-        timestamp: Date.now(),
-    };
+    });
 
-    appcast.versions = [entry, ...(appcast.versions || []).filter((item) => item.version !== version)];
-    fs.writeFileSync(appcastPath, `${JSON.stringify(appcast, null, 2)}\n`);
+    fs.writeFileSync(appcastPath, `${JSON.stringify(upsertAppcast(appcast, entry), null, 2)}\n`);
     console.log(`Updated appcast.json for ${tag}`);
 }
 

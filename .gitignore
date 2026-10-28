@@ -89,3 +89,7 @@ release/
 
 # vscode
 .vscode
+
+# ai ide
+.workbuddy
+.trae
