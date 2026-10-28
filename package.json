@@ -1,6 +1,6 @@
 {
   "name": "bob-plugin-microsoft-tts",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Bob plugin: Microsoft Azure / Edge TTS via multiple providers",
   "private": true,
   "type": "module",

@@ -58,6 +58,20 @@ declare const $http:
     | undefined;
 
 /**
+ * Bob 日志工具，用于在插件调试窗口中输出日志。
+ *
+ * 仅在 Bob 运行时存在，非调试环境可能为 `undefined`，使用前需判空。
+ */
+declare const $log:
+    | {
+          /** 输出普通日志 */
+          info?(message: string): void;
+          /** 输出错误日志 */
+          error?(message: string): void;
+      }
+    | undefined;
+
+/**
  * Bob WebSocket API，用于与 TTS 服务建立双向通信连接。
  *
  * `socket.listenReceiveData` 第二参数是字节数组（或 `$data`-like 对象），
@@ -124,4 +138,14 @@ interface BobWebSocket {
      * @param handler - 发生错误时的回调函数，第二参数为错误信息
      */
     listenError(handler: (socket: BobWebSocket, error: unknown) => void): void;
+    /**
+     * 监听连接关闭事件。
+     *
+     * 回调参数形态在各 Bob 版本间不完全一致，实际参数可能是
+     * `(socket, code, reason)`、`(socket, reason)`，早期版本也可能没有该方法，
+     * 因此声明为可选并用可变参数接收。
+     *
+     * @param handler - 连接关闭时的回调函数
+     */
+    listenClose?(handler: (socket: BobWebSocket, ...rest: unknown[]) => void): void;
 }

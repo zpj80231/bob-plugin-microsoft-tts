@@ -1,6 +1,6 @@
 {
   "identifier": "io.zpj80231.bob-plugin-microsoft-tts",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "category": "tts",
   "name": "Microsoft TTS",
   "summary": "使用 Edge TTS / Microsoft Azure 免秘钥 TTS 语音合成",
